@@ -221,3 +221,68 @@ input:focus{border-color:#6b43e8;box-shadow:4px 4px 0 #d9c9ff}
 @keyframes tiny-fire{from{transform:scale(.88) skewX(-5deg)}to{transform:scale(1.08) skewX(5deg)}}
 @keyframes ember-orbit{from{transform:rotate(0) translateX(13px)}to{transform:rotate(360deg) translateX(13px)}}
 @media(prefers-reduced-motion:reduce){.fire-loader:after,.fire-loader i{animation:none!important}}
+
+/* Dark neon skin and bouncing DVD-style room mark. */
+:root{--ink:#f5f3ff;--muted:#9895ad;--purple:#9d6cff;--purple-dark:#7545eb;--line:#29243d;--pale:#151124;--green:#60f5c4}
+html{color-scheme:dark}
+body{background:radial-gradient(circle at 12% 8%,#2a1258 0,transparent 31%),radial-gradient(circle at 88% 86%,#062b38 0,transparent 33%),#05070d;color:var(--ink)}
+.shell{background:transparent}
+.join-layout,.room{border-color:#6d52a8;background:#0a0d17;box-shadow:9px 11px 0 #020308,0 0 42px #8a54ff2e}
+.welcome-panel{background:radial-gradient(circle at 90% 10%,#49258b 0,transparent 42%),linear-gradient(155deg,#16102c,#090c18 88%);color:#fff}
+.welcome-panel:before{border-color:#73ffe83d}
+.welcome-copy h1{color:#fff;text-shadow:0 0 24px #9a6dff42}
+.welcome-copy h1>span{color:#d9ff57;text-shadow:3px 3px 0 #090b13,0 0 20px #d9ff5773}
+.welcome-copy>p,.welcome-footer{color:#aaa4bd}
+.brand-mark{background:#d9ff57;border-color:#080b14;box-shadow:3px 3px 0 #080b14,0 0 18px #d9ff5770}
+.join-panel,.conversation{background:#0c0f1b}
+.join-heading h2,.profile-preview strong,.avatar-fieldset legend,.field-label{color:#f7f5ff}
+.join-heading>p,.join-footnote{color:#9e9aae}
+.profile-preview{background:#18132a;border-color:#6f57a7;box-shadow:4px 4px 0 #05060b,0 0 18px #9b62ff20}
+.preview-label{color:#b8a3f0}
+.avatar-option{background:#111522;border-color:#302a47;box-shadow:2px 2px 0 #05060b}
+.avatar-option:hover{background:#171229;box-shadow:3px 6px 0 #06070c,0 0 15px #9d6cff38}
+.avatar-option[aria-pressed=true]{background:#d9ff57;border-color:#d9ff57;box-shadow:3px 4px 0 #05060b,0 0 18px #d9ff5752}
+input,.composer textarea{color:#f8f7ff;caret-color:#78fff1}
+input{background:#101522;border-color:#39334e}
+input::placeholder,.composer textarea::placeholder{color:#716d82}
+input:focus{border-color:#8f67ff;box-shadow:0 0 0 3px #8f67ff20,0 0 19px #8f67ff3b}
+.primary-button{background:#d9ff57;color:#080b14;border-color:#080b14;box-shadow:5px 5px 0 #05060a,0 0 21px #d9ff5745}
+.primary-button:hover{background:#caff33;box-shadow:7px 7px 0 #05060a,0 0 28px #d9ff5760}
+.fire-log{box-shadow:0 1px 0 #080b14}
+.sidebar{background:#080a12;border-color:#302546}
+.sidebar-section>.eyebrow,.sidebar-caption{color:#a996da}
+.room-nav{background:#171329;border-color:#8c67ed;box-shadow:4px 4px 0 #030409,0 0 18px #986cff35}
+.room-nav .hash,.room-nav strong{color:#f5f1ff}
+.room-nav div>span{color:#a9a2b8}
+.room-note{background:#171220;color:#f8f4ff;border-color:#fe64ce;box-shadow:5px 6px 0 #030409,0 0 20px #fe64ce32}
+.room-note .note-spark{color:#fe64ce;text-shadow:0 0 15px #fe64ce}
+.room-note p{color:#aba4b8}.room-note .note-line{background:#fe64ce}
+.room-header{background:#0c0f1b;border-color:#2b243d}
+.room-hash{background:#151124;border-color:#8e68ef;color:#d9ff57;box-shadow:3px 3px 0 #030409,0 0 15px #9d6cff33}
+.room-title h1{color:#f6f4ff}.room-title p{color:#8f8b9e}
+.presence-pill{background:#0d241e;color:#72f5ca;border-color:#2b8c71;box-shadow:0 0 14px #60f5c426}
+.icon-button{background:#121522;border-color:#45385e;color:#d8cff0;box-shadow:2px 2px 0 #030409}
+.icon-button:hover{background:#241634;color:#ff73d2}
+.room-banner{background:linear-gradient(90deg,#23143c,#102a35);border-color:#815de3;color:#f7f3ff;box-shadow:3px 3px 0 #030409,0 0 18px #8c61ff25}
+.banner-tag{color:#d9ff57;text-shadow:0 0 10px #d9ff5752}
+.message-scroll{position:relative;background-color:#090c16;background-image:radial-gradient(#4b3b6d 1px,transparent 1px);background-size:25px 25px}
+.message,.history-controls,#empty-state,#messages{position:relative;z-index:2}
+.bubble{background:#131725;border-color:#403850;color:#f2eff9;box-shadow:3px 4px 0 #04050a}
+.mine .bubble{background:#24174a;border-color:#9c72ff;color:#fff;box-shadow:3px 4px 0 #04050a,0 0 14px #9c72ff24}
+.message-meta strong,.message.mine .message-meta strong{color:#bfa9ff}.message-meta{color:#858094}
+.date-divider{color:#8f86a3}.date-divider:before,.date-divider:after{background:#332b45}
+#empty-state{background:#0d101bd9;border-color:#46395e;color:#8f8a9c}
+#empty-state h2{color:#eeeaff}.empty-avatars img{border-color:#6f58a0;box-shadow:3px 3px 0 #030409}
+.composer-footer{background:#090c15;border-color:#2c253d}
+.composer{background:#101420;border-color:#413651;box-shadow:4px 4px 0 #030409}
+.composer:focus-within{border-color:#8d66f0;box-shadow:4px 4px 0 #030409,0 0 18px #8d66f035}
+.composer button{background:#875bef;border-color:#ba9fff;box-shadow:2px 2px 0 #030409,0 0 14px #875bef45}
+.composer button:hover:not(:disabled){background:#a16fff}
+.composer-note{color:#716d80}.composer-note strong{color:#b99dff}
+.quiet-button,.new-messages{background:#141827;border-color:#675283;color:#eee9fa;box-shadow:2px 3px 0 #030409}.quiet-button:hover,.new-messages{background:#21163a;color:#d9ff57}
+.dvd-saver{--dvd-color:#78fff1;position:absolute;z-index:1;left:0;top:0;width:92px;height:48px;display:grid;place-content:center;text-align:center;color:var(--dvd-color);opacity:.32;filter:drop-shadow(0 0 8px var(--dvd-color));pointer-events:none;will-change:transform}
+.dvd-saver strong{position:relative;font-family:Arial Black,Arial,sans-serif;font-size:24px;font-style:italic;line-height:19px;letter-spacing:-2px}
+.dvd-saver strong:after{content:"";position:absolute;left:3px;right:0;bottom:-8px;height:8px;border:2px solid currentColor;border-top-width:1px;border-radius:50%}
+.dvd-saver span{margin-top:8px;font-family:Arial,sans-serif;font-size:6px;font-weight:900;letter-spacing:3px}
+@media(max-width:760px){.join-panel,.conversation{background:#0c0f1b}.welcome-panel{background:linear-gradient(135deg,#21123f,#0b1020)}.room,.message-scroll{background-color:#090c16}.dvd-saver{width:72px;height:40px}.dvd-saver strong{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.dvd-saver{display:none}}

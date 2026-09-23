@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-  <meta name="theme-color" content="#6b43e8">
+  <meta name="theme-color" content="#080b14">
   <title>Chatter — Big chat energy</title>
   <link rel="icon" href="/static/avatars/orbit.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/styles.css?v=8">
+  <link rel="stylesheet" href="/static/styles.css?v=9">
 </head>
 <body>
   <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -70,6 +70,7 @@
         </header>
         <div class="room-banner"><svg class="icon"><use href="#icon-spark"/></svg><span>Welcome to the good part of the internet.</span><span class="banner-tag">YOU BELONG HERE</span></div>
         <div id="message-scroll" class="message-scroll">
+          <div id="dvd-saver" class="dvd-saver" aria-hidden="true"><strong>DVD</strong><span>CHATTER</span></div>
           <div class="history-controls"><button id="load-older" class="quiet-button hidden" type="button">Load earlier messages</button></div>
           <div id="empty-state"><div class="empty-avatars"><img src="/static/avatars/facepalm.png" alt=""><img src="/static/avatars/gigachad.webp" alt=""><img src="/static/avatars/handsome-squidward.png" alt=""></div><span class="eyebrow">THE MIC IS YOURS</span><h2>Be the plot twist.<br>Say hello first.</h2><p>Everyone in the room will see your message.</p></div>
           <div id="messages" role="log" aria-label="Group messages" aria-live="polite" aria-relevant="additions"></div>
@@ -88,6 +89,6 @@
       </section>
     </section>
   </main>
-  <script src="/static/app.js?v=6" defer></script>
+  <script src="/static/app.js?v=7" defer></script>
 </body>
 </html>

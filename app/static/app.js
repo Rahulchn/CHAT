@@ -249,6 +249,30 @@ el("message-input").addEventListener("keydown",event => {
     event.preventDefault(); el("message-form").requestSubmit();
   }
 });
+
+const dvdMotion = { x: 30, y: 30, vx: 62, vy: 48, last: 0, color: 0 };
+const dvdColors = ["#78fff1", "#d8ff4f", "#ff5fcf", "#9d7cff", "#ff9c46"];
+const dvdReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function animateDvd(time) {
+  const saver=el("dvd-saver"), viewport=el("message-scroll");
+  if (!dvdReducedMotion && !el("room-view").classList.contains("hidden") && viewport.clientWidth && viewport.clientHeight) {
+    const dt=Math.min((time-dvdMotion.last)/1000,.04) || 0;
+    const maxX=Math.max(0,viewport.clientWidth-saver.offsetWidth-18);
+    const maxY=Math.max(0,viewport.clientHeight-saver.offsetHeight-18);
+    dvdMotion.x+=dvdMotion.vx*dt; dvdMotion.y+=dvdMotion.vy*dt;
+    let bounced=false;
+    if (dvdMotion.x<=9 || dvdMotion.x>=maxX) { dvdMotion.vx*=-1; dvdMotion.x=Math.max(9,Math.min(maxX,dvdMotion.x)); bounced=true; }
+    if (dvdMotion.y<=9 || dvdMotion.y>=maxY) { dvdMotion.vy*=-1; dvdMotion.y=Math.max(9,Math.min(maxY,dvdMotion.y)); bounced=true; }
+    if (bounced) {
+      dvdMotion.color=(dvdMotion.color+1)%dvdColors.length;
+      saver.style.setProperty("--dvd-color",dvdColors[dvdMotion.color]);
+    }
+    saver.style.transform=`translate3d(${dvdMotion.x}px,${viewport.scrollTop+dvdMotion.y}px,0)`;
+  }
+  dvdMotion.last=time;
+  requestAnimationFrame(animateDvd);
+}
+requestAnimationFrame(animateDvd);
 el("load-older").addEventListener("click", async () => {
   if (!state.messages.size || !state.hasMore) return;
   const version=state.historyVersion;
