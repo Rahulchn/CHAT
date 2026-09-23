@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#080b14">
   <title>Chatter — Big chat energy</title>
   <link rel="icon" href="/static/avatars/orbit.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/styles.css?v=9">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("chatter_theme")==="light"?"light":"dark"}catch{document.documentElement.dataset.theme="dark"}</script>
+  <link rel="stylesheet" href="/static/styles.css?v=10">
 </head>
 <body>
   <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -38,6 +39,7 @@
         <div class="welcome-footer"><span class="mini-avatars"><img src="/static/avatars/roll-safe.jpg" alt=""><img src="/static/avatars/sad-frog.png" alt=""><img src="/static/avatars/jonah-hill.jpg" alt=""></span><span>One room. Unlimited main character moments.</span></div>
       </div>
       <div class="join-panel">
+        <button class="theme-toggle" type="button" aria-label="Switch to light mode"><span class="theme-glyph" aria-hidden="true">☀</span><span class="theme-label">Light mode</span></button>
         <div class="join-heading"><span class="eyebrow">YOUR NEXT TAB IS THE FUN ONE</span><h2>Pick your vibe.<br>Jump in.</h2><p>Choose an avatar, add your name, and you're in.</p></div>
         <form id="join-form">
           <div class="profile-preview"><span id="preview-avatar" class="avatar avatar-xl"></span><div><span class="preview-label">YOUR CHAT PERSONA</span><strong id="preview-name">The mystery guest</strong></div><svg class="icon"><use href="#icon-spark"/></svg></div>
@@ -66,6 +68,7 @@
           <span class="room-hash" aria-hidden="true">#</span>
           <div class="room-title"><h1>The group chat <span aria-hidden="true">✳</span></h1><p>Same room. Different chaos.</p></div>
           <div class="presence-pill"><span id="status-dot" class="tiny-dot"></span><span id="connection-status" role="status">Connecting…</span><span id="online-count"></span></div>
+          <button class="theme-toggle" type="button" aria-label="Switch to light mode"><span class="theme-glyph" aria-hidden="true">☀</span><span class="theme-label">Light mode</span></button>
           <button id="leave-button" class="icon-button" type="button" title="Leave room" aria-label="Leave room"><svg class="icon"><use href="#icon-leave"/></svg></button>
         </header>
         <div class="room-banner"><svg class="icon"><use href="#icon-spark"/></svg><span>Welcome to the good part of the internet.</span><span class="banner-tag">YOU BELONG HERE</span></div>
@@ -89,6 +92,6 @@
       </section>
     </section>
   </main>
-  <script src="/static/app.js?v=7" defer></script>
+  <script src="/static/app.js?v=8" defer></script>
 </body>
 </html>

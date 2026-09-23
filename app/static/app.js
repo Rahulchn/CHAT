@@ -3,6 +3,22 @@ const storage = {
   get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { sessionStorage.setItem(key, value); } catch {} }
 };
+const themeButtons = [...document.querySelectorAll(".theme-toggle")];
+function setTheme(theme, persist=false) {
+  document.documentElement.dataset.theme=theme;
+  document.querySelector('meta[name="theme-color"]').content=theme==="dark" ? "#080b14" : "#f4f0ff";
+  themeButtons.forEach(button => {
+    const next=theme==="dark" ? "light" : "dark";
+    button.querySelector(".theme-glyph").textContent=theme==="dark" ? "☀" : "☾";
+    button.querySelector(".theme-label").textContent=next[0].toUpperCase()+next.slice(1)+" mode";
+    button.setAttribute("aria-label","Switch to "+next+" mode");
+  });
+  if (persist) try { localStorage.setItem("chatter_theme",theme); } catch {}
+}
+setTheme(document.documentElement.dataset.theme || "dark");
+themeButtons.forEach(button => button.addEventListener("click",() => {
+  setTheme(document.documentElement.dataset.theme==="dark" ? "light" : "dark",true);
+}));
 function makeId() {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   bytes[6] = (bytes[6] & 15) | 64; bytes[8] = (bytes[8] & 63) | 128;

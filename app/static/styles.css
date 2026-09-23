@@ -265,7 +265,7 @@ input:focus{border-color:#8f67ff;box-shadow:0 0 0 3px #8f67ff20,0 0 19px #8f67ff
 .icon-button:hover{background:#241634;color:#ff73d2}
 .room-banner{background:linear-gradient(90deg,#23143c,#102a35);border-color:#815de3;color:#f7f3ff;box-shadow:3px 3px 0 #030409,0 0 18px #8c61ff25}
 .banner-tag{color:#d9ff57;text-shadow:0 0 10px #d9ff5752}
-.message-scroll{position:relative;background-color:#090c16;background-image:radial-gradient(#4b3b6d 1px,transparent 1px);background-size:25px 25px}
+.message-scroll{position:relative;background-color:#090c16;background-image:none}
 .message,.history-controls,#empty-state,#messages{position:relative;z-index:2}
 .bubble{background:#131725;border-color:#403850;color:#f2eff9;box-shadow:3px 4px 0 #04050a}
 .mine .bubble{background:#24174a;border-color:#9c72ff;color:#fff;box-shadow:3px 4px 0 #04050a,0 0 14px #9c72ff24}
@@ -286,3 +286,51 @@ input:focus{border-color:#8f67ff;box-shadow:0 0 0 3px #8f67ff20,0 0 19px #8f67ff
 .dvd-saver span{margin-top:8px;font-family:Arial,sans-serif;font-size:6px;font-weight:900;letter-spacing:3px}
 @media(max-width:760px){.join-panel,.conversation{background:#0c0f1b}.welcome-panel{background:linear-gradient(135deg,#21123f,#0b1020)}.room,.message-scroll{background-color:#090c16}.dvd-saver{width:72px;height:40px}.dvd-saver strong{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.dvd-saver{display:none}}
+
+/* Persistent light/dark theme control. */
+.join-panel{position:relative}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 10px;border:1px solid #55466f;border-radius:10px;background:#141827;color:#ddd5ef;font:800 10px/1 "Segoe UI",sans-serif;letter-spacing:.2px;box-shadow:2px 2px 0 #030409;cursor:pointer;transition:background .18s,border-color .18s,color .18s,box-shadow .18s,transform .18s}
+.theme-toggle:hover{background:#201833;border-color:#9672ef;color:#fff;box-shadow:2px 2px 0 #030409,0 0 14px #986cff42;transform:translateY(-1px)}
+.theme-glyph{font-size:15px;line-height:1}
+.join-panel>.theme-toggle{position:absolute;top:19px;right:22px;z-index:3}
+.room-header>.theme-toggle+.icon-button{margin-left:0}
+
+html[data-theme="light"]{color-scheme:light}
+html[data-theme="light"] body{background:radial-gradient(circle at 10% 12%,#ffd5e8 0,transparent 27%),radial-gradient(circle at 94% 80%,#dbd0ff 0,transparent 32%),#f4f0ff;color:#251838}
+html[data-theme="light"] .join-layout,html[data-theme="light"] .room{border-color:#251838;background:#fffdf9;box-shadow:10px 12px 0 #251838,0 32px 55px #3d22641a}
+html[data-theme="light"] .welcome-panel{background:radial-gradient(circle at 96% 9%,#926bff 0,transparent 40%),linear-gradient(155deg,#6b43e8 8%,#4f2ec7 92%)}
+html[data-theme="light"] .welcome-panel:before{border-color:#ffffff46}
+html[data-theme="light"] .welcome-copy h1{color:#fff;text-shadow:none}
+html[data-theme="light"] .welcome-copy h1>span{color:#e3ff53;text-shadow:4px 4px 0 #251838}
+html[data-theme="light"] .welcome-copy>p,html[data-theme="light"] .welcome-footer{color:#ece2ff}
+html[data-theme="light"] .join-panel,html[data-theme="light"] .conversation{background:#fffdf9}
+html[data-theme="light"] .join-heading h2,html[data-theme="light"] .profile-preview strong,html[data-theme="light"] .avatar-fieldset legend,html[data-theme="light"] .field-label{color:#251838}
+html[data-theme="light"] .join-heading>p,html[data-theme="light"] .join-footnote{color:#706780}
+html[data-theme="light"] .profile-preview{background:#fff0a8;border-color:#251838;box-shadow:4px 4px 0 #251838}
+html[data-theme="light"] .preview-label{color:#655226}
+html[data-theme="light"] .avatar-option{background:#fff;border-color:#e8dcf6;box-shadow:2px 2px 0 #e8dcf6}
+html[data-theme="light"] .avatar-option:hover{background:#fff;box-shadow:3px 6px 0 #d9c9f5}
+html[data-theme="light"] .avatar-option[aria-pressed=true]{background:#e3ff53;border-color:#251838;box-shadow:3px 4px 0 #251838}
+html[data-theme="light"] input{background:#fff;border-color:#d9d0e3;color:#251838;caret-color:#6b43e8}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] .composer textarea::placeholder{color:#a09aa8}
+html[data-theme="light"] input:focus{border-color:#6b43e8;box-shadow:4px 4px 0 #d9c9ff}
+html[data-theme="light"] .primary-button{background:#e3ff53;color:#251838;border-color:#251838;box-shadow:5px 5px 0 #251838}
+html[data-theme="light"] .room-header,html[data-theme="light"] .conversation{background:#fffdf9}
+html[data-theme="light"] .room-title h1{color:#251838}html[data-theme="light"] .room-title p{color:#80748b}
+html[data-theme="light"] .room-banner{background:#ffb8d3;border-color:#251838;color:#251838;box-shadow:3px 3px 0 #251838}
+html[data-theme="light"] .banner-tag{color:#251838;text-shadow:none}
+html[data-theme="light"] .message-scroll{background-color:#fffdf9;background-image:none}
+html[data-theme="light"] .bubble{background:#fff;border-color:#251838;color:#251838;box-shadow:3px 4px 0 #251838}
+html[data-theme="light"] .mine .bubble{background:#e3ff53;border-color:#251838;color:#251838;box-shadow:3px 4px 0 #251838}
+html[data-theme="light"] .message-meta strong,html[data-theme="light"] .message.mine .message-meta strong{color:#5739bb}
+html[data-theme="light"] .message-meta{color:#786d84}
+html[data-theme="light"] .date-divider{color:#756387}html[data-theme="light"] .date-divider:before,html[data-theme="light"] .date-divider:after{background:#cec3dd}
+html[data-theme="light"] #empty-state{background:#fffdf9e8;border-color:#c7b8db;color:#756b83}html[data-theme="light"] #empty-state h2{color:#251838}
+html[data-theme="light"] .composer-footer{background:#fffdf9;border-color:#251838}
+html[data-theme="light"] .composer{background:#fff;border-color:#251838;box-shadow:4px 4px 0 #251838}
+html[data-theme="light"] .composer textarea{color:#251838;caret-color:#6b43e8}
+html[data-theme="light"] .composer-note{color:#756b83}html[data-theme="light"] .composer-note strong{color:#6b43e8}
+html[data-theme="light"] .theme-toggle{background:#fff;color:#251838;border-color:#251838;box-shadow:2px 2px 0 #251838}
+html[data-theme="light"] .theme-toggle:hover{background:#fff0a8;border-color:#251838;color:#251838;box-shadow:3px 3px 0 #251838}
+html[data-theme="light"] .dvd-saver{opacity:.17}
+@media(max-width:760px){.theme-label{display:none}.theme-toggle{width:36px;padding:7px}.join-panel>.theme-toggle{top:18px;right:18px}}
