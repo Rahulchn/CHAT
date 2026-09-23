@@ -52,7 +52,25 @@ AVATARS.forEach(id => {
   button.addEventListener("click", () => { chosenAvatar=id; storage.set("group_avatar",id); previewProfile(); });
   el("avatar-picker").append(button);
 });
-el("display-name").addEventListener("input",previewProfile);
+let fireResetTimer = null;
+function setFireScene(scene) {
+  el("fire-stage").dataset.fireState = scene;
+}
+function strikeFire() {
+  clearTimeout(fireResetTimer);
+  if (!el("display-name").value.trim()) {
+    setFireScene("idle");
+    return;
+  }
+  setFireScene("strike");
+  fireResetTimer = setTimeout(() => {
+    if (!state.joined) setFireScene("idle");
+  }, 320);
+}
+el("display-name").addEventListener("input", () => {
+  previewProfile();
+  strikeFire();
+});
 previewProfile();
 function resizeComposer() {
   const input=el("message-input");
@@ -192,6 +210,7 @@ function leave() {
   el("display-name").value = state.name;
   previewProfile();
   el("join-error").textContent = ""; roomError("");
+  clearTimeout(fireResetTimer); setFireScene("idle");
   el("display-name").focus();
 }
 el("join-form").addEventListener("submit", event => {
@@ -200,7 +219,16 @@ el("join-form").addEventListener("submit", event => {
   if (!name || name.length>40) { el("join-error").textContent = "Enter a name between 1 and 40 characters."; return; }
   if (state.socket) { const old=state.socket; state.socket=null; old.close(); }
   state.name=name; state.joined=true; state.retry=0;
-  el("join-error").textContent=""; roomError(""); connect();
+  el("join-error").textContent=""; roomError("");
+  el("join-button").disabled=true;
+  clearTimeout(fireResetTimer);
+  const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setFireScene(reducedMotion ? "lit" : "ignite");
+  if (reducedMotion) connect();
+  else {
+    fireResetTimer=setTimeout(() => setFireScene("lit"),650);
+    setTimeout(connect,1200);
+  }
 });
 el("leave-button").addEventListener("click",leave);
 el("message-form").addEventListener("submit",event => {

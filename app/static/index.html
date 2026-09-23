@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#6b43e8">
   <title>Chatter — Big chat energy</title>
   <link rel="icon" href="/static/avatars/orbit.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/styles.css?v=5">
+  <link rel="stylesheet" href="/static/styles.css?v=6">
 </head>
 <body>
   <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -26,14 +26,12 @@
           <h1>Big chat<br><span>energy.</span></h1>
           <p>Come for the conversation.<br class="desktop-break"> Stay for the questionable memes.</p>
         </div>
-        <div class="welcome-art" aria-hidden="true">
-          <div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div>
-          <div class="floating-avatar art-avatar-one"><img src="/static/avatars/gigachad.webp" alt=""></div>
-          <div class="floating-avatar art-avatar-two"><img src="/static/avatars/patrick.png" alt=""></div>
-          <div class="floating-avatar art-avatar-three"><img src="/static/avatars/doge.png" alt=""></div>
-          <div class="sample-bubble bubble-one">you made it! <span>✦</span></div>
-          <div class="sample-bubble bubble-two">say less 😎</div>
-          <div class="art-star">✳</div><div class="art-dot"></div>
+        <div id="fire-stage" class="fire-stage" data-fire-state="idle" aria-hidden="true">
+          <img class="fire-frame fire-frame-idle" src="/static/entry-fire/fire-idle.png" alt="">
+          <img class="fire-frame fire-frame-strike" src="/static/entry-fire/fire-strike.png" alt="">
+          <img class="fire-frame fire-frame-ignite" src="/static/entry-fire/fire-ignite.png" alt="">
+          <img class="fire-frame fire-frame-lit" src="/static/entry-fire/fire-lit.png" alt="">
+          <span class="fire-stage-caption">Every conversation starts with a spark.</span>
         </div>
         <div class="welcome-footer"><span class="mini-avatars"><img src="/static/avatars/roll-safe.jpg" alt=""><img src="/static/avatars/sad-frog.png" alt=""><img src="/static/avatars/jonah-hill.jpg" alt=""></span><span>One room. Unlimited main character moments.</span></div>
       </div>
@@ -85,6 +83,6 @@
       </section>
     </section>
   </main>
-  <script src="/static/app.js?v=4" defer></script>
+  <script src="/static/app.js?v=5" defer></script>
 </body>
 </html>
