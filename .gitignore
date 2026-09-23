@@ -3,6 +3,8 @@ __pycache__/
 .pytest_cache/
 .pytest-tmp/
 .pytest-tmp-group/
+.pytest-tmp-avatar/
 *.py[cod]
 chat.db
 .env
+real-time-chat/
