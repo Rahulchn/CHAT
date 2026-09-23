@@ -54,7 +54,7 @@ AVATARS.forEach(id => {
 });
 let fireResetTimer = null;
 function setFireScene(scene) {
-  el("fire-stage").dataset.fireState = scene;
+  el("fire-loader").dataset.fireState = scene;
 }
 function strikeFire() {
   clearTimeout(fireResetTimer);
