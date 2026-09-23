@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#6b43e8">
+  <title>Chatter — Big chat energy</title>
+  <link rel="icon" href="/static/avatars/orbit.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles.css?v=5">
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-8 8H4l1.5-4A8 8 0 1 1 20 11.5Z"/><path d="M8 10h8M8 14h5"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-send" viewBox="0 0 24 24"><path d="m21 3-7 18-4-7-7-4L21 3ZM10 14 21 3"/></symbol>
+    <symbol id="icon-leave" viewBox="0 0 24 24"><path d="M9 4H4v16h5m5-12 4 4-4 4m-5-4h13"/></symbol>
+    <symbol id="icon-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></symbol>
+    <symbol id="icon-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01"/></symbol>
+    <symbol id="icon-down" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6"/></symbol>
+  </defs></svg>
+  <main class="shell">
+    <section id="join-view" class="join-layout">
+      <div class="welcome-panel">
+        <a class="brand" href="/" aria-label="Chatter home"><span class="brand-mark"><svg class="icon"><use href="#icon-chat"/></svg></span>chatter<span class="brand-dot">.</span></a>
+        <div class="welcome-copy"><span class="eyebrow"><span class="tiny-dot"></span> THE GROUP CHAT IS OPEN</span>
+          <h1>Big chat<br><span>energy.</span></h1>
+          <p>Come for the conversation.<br class="desktop-break"> Stay for the questionable memes.</p>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div>
+          <div class="floating-avatar art-avatar-one"><img src="/static/avatars/gigachad.webp" alt=""></div>
+          <div class="floating-avatar art-avatar-two"><img src="/static/avatars/patrick.png" alt=""></div>
+          <div class="floating-avatar art-avatar-three"><img src="/static/avatars/doge.png" alt=""></div>
+          <div class="sample-bubble bubble-one">you made it! <span>✦</span></div>
+          <div class="sample-bubble bubble-two">say less 😎</div>
+          <div class="art-star">✳</div><div class="art-dot"></div>
+        </div>
+        <div class="welcome-footer"><span class="mini-avatars"><img src="/static/avatars/roll-safe.jpg" alt=""><img src="/static/avatars/sad-frog.png" alt=""><img src="/static/avatars/jonah-hill.jpg" alt=""></span><span>One room. Unlimited main character moments.</span></div>
+      </div>
+      <div class="join-panel">
+        <div class="join-heading"><span class="eyebrow">YOUR NEXT TAB IS THE FUN ONE</span><h2>Pick your vibe.<br>Jump in.</h2><p>Choose an avatar, add your name, and you're in.</p></div>
+        <form id="join-form">
+          <div class="profile-preview"><span id="preview-avatar" class="avatar avatar-xl"></span><div><span class="preview-label">YOUR CHAT PERSONA</span><strong id="preview-name">The mystery guest</strong></div><svg class="icon"><use href="#icon-spark"/></svg></div>
+          <fieldset class="avatar-fieldset"><legend>Choose your avatar <span id="avatar-name">Gigachad</span></legend><div id="avatar-picker" class="avatar-picker"></div></fieldset>
+          <label for="display-name" class="field-label">What should we call you?</label>
+          <input id="display-name" placeholder="Your name" maxlength="40" required autocomplete="nickname">
+          <button id="join-button" class="primary-button" type="submit"><span>Enter the chat</span><svg class="icon"><use href="#icon-arrow"/></svg></button>
+        </form>
+        <p id="join-error" class="error" role="alert"></p>
+        <div class="join-footnote"><svg class="icon"><use href="#icon-smile"/></svg>No account. Just a name and good vibes.</div>
+      </div>
+    </section>
+
+    <section id="room-view" class="room hidden" aria-label="Group chat">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-mark"><svg class="icon"><use href="#icon-chat"/></svg></span>chatter<span class="brand-dot">.</span></div>
+        <div class="sidebar-section"><span class="eyebrow">THE HANGOUT</span><div class="room-nav" aria-current="page"><span class="hash">#</span><div><strong>The group chat</strong><span>Everyone's here</span></div><span class="tiny-dot"></span></div></div>
+        <div class="room-note"><span class="note-spark">✳</span><h3>No awkward<br>intros needed.</h3><p>Drop a thought, a joke,<br>or a very important “hey”.</p><span class="note-line"></span></div>
+        <div class="sidebar-bottom"><span class="sidebar-caption">GOOD VIBES HAVE ENTERED THE CHAT</span><div class="self-profile"><span id="sidebar-avatar" class="avatar"></span><div><strong id="sidebar-name"></strong><span>That's you</span></div><span class="tiny-dot"></span></div></div>
+      </aside>
+      <section class="conversation">
+        <header class="room-header">
+          <span class="room-hash" aria-hidden="true">#</span>
+          <div class="room-title"><h1>The group chat <span aria-hidden="true">✳</span></h1><p>Same room. Different chaos.</p></div>
+          <div class="presence-pill"><span id="status-dot" class="tiny-dot"></span><span id="connection-status" role="status">Connecting…</span><span id="online-count"></span></div>
+          <button id="leave-button" class="icon-button" type="button" title="Leave room" aria-label="Leave room"><svg class="icon"><use href="#icon-leave"/></svg></button>
+        </header>
+        <div class="room-banner"><svg class="icon"><use href="#icon-spark"/></svg><span>Welcome to the good part of the internet.</span><span class="banner-tag">YOU BELONG HERE</span></div>
+        <div id="message-scroll" class="message-scroll">
+          <div class="history-controls"><button id="load-older" class="quiet-button hidden" type="button">Load earlier messages</button></div>
+          <div id="empty-state"><div class="empty-avatars"><img src="/static/avatars/facepalm.png" alt=""><img src="/static/avatars/gigachad.webp" alt=""><img src="/static/avatars/handsome-squidward.png" alt=""></div><span class="eyebrow">THE MIC IS YOURS</span><h2>Be the plot twist.<br>Say hello first.</h2><p>Everyone in the room will see your message.</p></div>
+          <div id="messages" role="log" aria-label="Group messages" aria-live="polite" aria-relevant="additions"></div>
+        </div>
+        <button id="new-messages" class="new-messages hidden" type="button"><svg class="icon"><use href="#icon-down"/></svg>New messages</button>
+        <footer class="composer-footer">
+          <p id="room-error" class="error" role="alert"></p>
+          <form id="message-form" class="composer">
+            <span id="composer-avatar" class="avatar avatar-small"></span>
+            <label for="message-input" class="sr-only">Message the group</label>
+            <textarea id="message-input" rows="1" maxlength="2000" placeholder="Type something iconic…" required></textarea>
+            <button id="send-button" type="submit" aria-label="Send message" disabled><span id="send-label">Send</span><svg class="icon"><use href="#icon-send"/></svg></button>
+          </form>
+          <div class="composer-note"><span>Chatting as <strong id="current-name"></strong></span><span class="keyboard-hint"><kbd>Enter</kbd> to send <span>·</span> <kbd>Shift + Enter</kbd> for a new line</span><span id="character-count">0 / 2,000</span></div>
+        </footer>
+      </section>
+    </section>
+  </main>
+  <script src="/static/app.js?v=4" defer></script>
+</body>
+</html>
