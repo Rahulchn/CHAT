@@ -1,5 +1,18 @@
 # Run CHAT locally and through a Cloudflare quick tunnel
 
+## One command
+
+This starts CHAT, creates the tunnel, and prints the public link:
+
+```powershell
+cd C:\Users\rahul\Desktop\Chat
+powershell -ExecutionPolicy Bypass -File .\scripts\start-public.ps1
+```
+
+Keep that window open and press `Ctrl+C` when finished.
+
+## Manual two-window method
+
 Open two PowerShell windows and keep both running.
 
 ## Window 1 — application server

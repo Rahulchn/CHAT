@@ -21,9 +21,18 @@ For friends on the same Wi-Fi, run with `--host 0.0.0.0` instead, then share `ht
 
 ## Share temporarily over the internet
 
-The project includes a helper for creating a temporary Cloudflare Quick Tunnel.
-Install `cloudflared`, start the application server in one PowerShell window, and
-keep it running:
+The project includes a one-command launcher that starts CHAT, creates a temporary
+Cloudflare Quick Tunnel, and prints the public URL:
+
+```powershell
+cd C:\Users\rahul\Desktop\Chat
+powershell -ExecutionPolicy Bypass -File .\scripts\start-public.ps1
+```
+
+Keep that PowerShell window open and press `Ctrl+C` to stop the tunnel. If CHAT
+was not already running, the launcher stops its hidden Uvicorn process too.
+
+For the manual method, start the application server in one PowerShell window:
 
 ```powershell
 cd C:\Users\rahul\Desktop\Chat
