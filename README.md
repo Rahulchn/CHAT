@@ -9,7 +9,7 @@ Built with Python FastAPI, native WebSockets, async SQLAlchemy, SQLite, and plai
 ## Run locally
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8765
@@ -25,7 +25,7 @@ The project includes a one-command launcher that starts CHAT, creates a temporar
 Cloudflare Quick Tunnel, and prints the public URL:
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 powershell -ExecutionPolicy Bypass -File .\scripts\start-public.ps1
 ```
 
@@ -35,14 +35,14 @@ was not already running, the launcher stops its hidden Uvicorn process too.
 For the manual method, start the application server in one PowerShell window:
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8765
 ```
 
 In a second PowerShell window, start the tunnel:
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 powershell -ExecutionPolicy Bypass -File .\scripts\start-tunnel.ps1
 ```
 
@@ -63,7 +63,7 @@ resolving `localhost` to an IPv6 listener that Uvicorn may not be using.
 - `DATABASE_URL` defaults to `sqlite+aiosqlite:///./chat.db`, relative to the working directory. Start from this project directory to keep using the same database.
 - Group messages use a separate `group_messages` table. Existing account and private-message tables are left intact, but are no longer read or exposed by the app. Private conversations are not copied into the group room.
 - All new group messages and history are available to everyone who can reach this app. Display names are not verified or reserved; two visitors may use the same name. The browser's per-tab ID only styles its own messages and is not authentication.
-- For PostgreSQL later, install `asyncpg` and set `DATABASE_URL` to `postgresql+asyncpg://user:password@localhost/chat`. This changes the database connection; existing SQLite data is not automatically transferred.
+- For PostgreSQL later, install `asyncpg` and set `DATABASE_URL` to your PostgreSQL connection string. Keep credentials in a local `.env` file and never commit it. This changes the database connection; existing SQLite data is not automatically transferred.
 - Run one server worker. Room broadcast and online counts live in that process. Multiple workers would require a shared event layer.
 - The new avatar images came from third-party URLs supplied for this project. Check their reuse rights before publicly distributing or hosting the app.
 

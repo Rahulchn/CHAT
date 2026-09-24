@@ -5,7 +5,7 @@
 This starts CHAT, creates the tunnel, and prints the public link:
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 powershell -ExecutionPolicy Bypass -File .\scripts\start-public.ps1
 ```
 
@@ -18,7 +18,7 @@ Open two PowerShell windows and keep both running.
 ## Window 1 — application server
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8765
 ```
 
@@ -27,7 +27,7 @@ cd C:\Users\rahul\Desktop\Chat
 Either use the helper:
 
 ```powershell
-cd C:\Users\rahul\Desktop\Chat
+cd C:\path\to\CHAT
 powershell -ExecutionPolicy Bypass -File .\scripts\start-tunnel.ps1
 ```
 
