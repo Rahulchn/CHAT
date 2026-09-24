@@ -19,6 +19,36 @@ Open http://127.0.0.1:8765 in two tabs and enter a name in each. Messages appear
 
 For friends on the same Wi-Fi, run with `--host 0.0.0.0` instead, then share `http://YOUR-PC-IP:8765`. The PC and server must stay running. This does not publish the app on the internet.
 
+## Share temporarily over the internet
+
+The project includes a helper for creating a temporary Cloudflare Quick Tunnel.
+Install `cloudflared`, start the application server in one PowerShell window, and
+keep it running:
+
+```powershell
+cd C:\Users\rahul\Desktop\Chat
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8765
+```
+
+In a second PowerShell window, start the tunnel:
+
+```powershell
+cd C:\Users\rahul\Desktop\Chat
+powershell -ExecutionPolicy Bypass -File .\scripts\start-tunnel.ps1
+```
+
+The script checks that CHAT is reachable locally, then runs:
+
+```powershell
+cloudflared tunnel --protocol http2 --url http://127.0.0.1:8765
+```
+
+Share the generated `https://...trycloudflare.com` URL. Keep both PowerShell
+windows open. Quick Tunnel URLs are temporary, have no uptime guarantee, and
+change whenever a new tunnel is created. The explicit HTTP/2 protocol avoids
+networks that block outbound QUIC traffic, while `127.0.0.1` avoids Windows
+resolving `localhost` to an IPv6 listener that Uvicorn may not be using.
+
 ## Data and configuration
 
 - `DATABASE_URL` defaults to `sqlite+aiosqlite:///./chat.db`, relative to the working directory. Start from this project directory to keep using the same database.
