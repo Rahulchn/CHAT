@@ -23,3 +23,7 @@ class Database:
                 await connection.execute(text(
                     "ALTER TABLE group_messages ADD COLUMN avatar VARCHAR(20) NOT NULL DEFAULT 'orbit'"
                 ))
+            if "image_url" not in columns:
+                await connection.execute(text(
+                    "ALTER TABLE group_messages ADD COLUMN image_url VARCHAR(80)"
+                ))

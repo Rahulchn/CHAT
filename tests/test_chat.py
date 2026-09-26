@@ -1,8 +1,10 @@
 import sqlite3
+from io import BytesIO
 from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from PIL import Image, PngImagePlugin
 from starlette.websockets import WebSocketDisconnect
 
 from app.main import create_app
@@ -151,3 +153,50 @@ def test_avatar_migration_preserves_existing_group_messages(tmp_path):
             message = client.get("/api/messages").json()["messages"][0]
             assert message["body"] == "Keep this message"
             assert message["avatar"] == "orbit"
+            assert message["image_url"] is None
+
+
+def test_image_upload_message_and_metadata_removal(database_url, tmp_path):
+    upload_dir = tmp_path / "uploads"
+    source = BytesIO()
+    metadata = PngImagePlugin.PngInfo()
+    metadata.add_text("Location", "private-place")
+    Image.new("RGB", (24, 18), (120, 40, 200)).save(source, format="PNG", pnginfo=metadata)
+
+    with TestClient(create_app(database_url, upload_dir)) as client:
+        response = client.post("/api/uploads", content=source.getvalue(), headers={"Content-Type": "image/png"})
+        assert response.status_code == 201
+        image_url = response.json()["image_url"]
+        assert image_url.startswith("/api/uploads/") and image_url.endswith(".png")
+
+        downloaded = client.get(image_url)
+        assert downloaded.status_code == 200
+        assert downloaded.headers["content-type"] == "image/png"
+        assert downloaded.headers["x-content-type-options"] == "nosniff"
+        with Image.open(BytesIO(downloaded.content)) as saved:
+            assert saved.size == (24, 18)
+            assert "Location" not in saved.info
+
+        with client.websocket_connect("/ws") as socket:
+            join(socket)
+            socket.send_json({"type": "message", "body": "A picture", "image_url": image_url})
+            message = next_message(socket)
+            assert message["body"] == "A picture"
+            assert message["image_url"] == image_url
+
+            socket.send_json({"type": "message", "body": "", "image_url": "https://example.com/image.png"})
+            assert socket.receive_json()["type"] == "error"
+            socket.send_json({"type": "message", "body": "", "image_url": "/api/uploads/" + "0" * 32 + ".png"})
+            assert socket.receive_json()["message"] == "That uploaded image is no longer available."
+
+        assert client.get("/api/messages").json()["messages"][0]["image_url"] == image_url
+
+
+def test_image_upload_rejects_unsafe_and_oversized_files(database_url, tmp_path):
+    with TestClient(create_app(database_url, tmp_path / "uploads")) as client:
+        svg = b'<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'
+        assert client.post("/api/uploads", content=svg, headers={"Content-Type": "image/svg+xml"}).status_code == 415
+        fake_png = b"\x89PNG\r\n\x1a\nnot-an-image"
+        assert client.post("/api/uploads", content=fake_png, headers={"Content-Type": "image/png"}).status_code == 415
+        oversized = b"\x89PNG\r\n\x1a\n" + b"x" * (5 * 1024 * 1024)
+        assert client.post("/api/uploads", content=oversized, headers={"Content-Type": "image/png"}).status_code == 413

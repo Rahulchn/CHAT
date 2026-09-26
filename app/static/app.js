@@ -93,27 +93,196 @@ function resizeComposer() {
   input.style.height="auto";
   input.style.height=Math.min(input.scrollHeight,130)+"px";
   el("character-count").textContent=input.value.length.toLocaleString()+" / 2,000";
+  updateSendState();
 }
 el("message-input").addEventListener("input",resizeComposer);
 const state = { name: "", socket: null, joined: false, ready: false, timer: null,
-  retry: 0, messages: new Map(), hasMore: false, pending: null, pendingTimer: null, historyVersion: 0 };
+  retry: 0, messages: new Map(), hasMore: false, pending: null, pendingTimer: null,
+  historyVersion: 0, image: null, uploading: false };
+
+function updateSendState() {
+  const hasContent=!!el("message-input").value.trim() || !!state.image;
+  const blocked=!state.ready || !!state.pending || state.uploading;
+  el("send-button").disabled=blocked || !hasContent;
+  el("image-button").disabled=blocked;
+}
 
 function ready(value, label) {
   state.ready = value;
   el("connection-status").textContent = label;
   el("status-dot").classList.toggle("offline",!value);
   el("status-dot").parentElement.setAttribute("aria-label",label);
-  el("send-button").disabled = !value || !!state.pending;
+  updateSendState();
   el("join-button").disabled = state.joined && !value;
   if (!value) el("online-count").textContent = "";
 }
 function clearPending() {
   clearTimeout(state.pendingTimer);
   state.pending = null;
+  state.uploading = false;
   el("send-label").textContent = "Send";
-  el("send-button").disabled = !state.ready;
+  updateSendState();
 }
 function roomError(message) { el("room-error").textContent = message; }
+
+const URL_PATTERN = /https?:\/\/[^\s<>"']+/gi;
+const TRAILING_URL_PUNCTUATION = /[),.!?;:\]}]+$/;
+
+function cleanUrlCandidate(value) {
+  return value.replace(TRAILING_URL_PUNCTUATION, "");
+}
+
+function videoDetails(value) {
+  let url;
+  try { url = new URL(cleanUrlCandidate(value)); } catch { return null; }
+  if (!['http:', 'https:'].includes(url.protocol)) return null;
+
+  const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  let videoId = "";
+  if (host === "youtu.be") {
+    videoId = url.pathname.split("/").filter(Boolean)[0] || "";
+  } else if (["youtube.com", "m.youtube.com", "music.youtube.com", "youtube-nocookie.com"].includes(host)) {
+    if (url.pathname === "/watch") videoId = url.searchParams.get("v") || "";
+    else {
+      const parts = url.pathname.split("/").filter(Boolean);
+      if (["shorts", "embed", "live"].includes(parts[0])) videoId = parts[1] || "";
+    }
+  }
+  if (/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+    return {
+      kind: "embed", provider: "YouTube", title: "YouTube video",
+      source: url.href, player: `https://www.youtube-nocookie.com/embed/${videoId}`,
+    };
+  }
+
+  if (host === "drive.google.com") {
+    const pathMatch = url.pathname.match(/^\/file\/d\/([A-Za-z0-9_-]{10,})/);
+    const driveId = pathMatch?.[1] || url.searchParams.get("id") || "";
+    if (/^[A-Za-z0-9_-]{10,}$/.test(driveId)) {
+      const resourceKey = url.searchParams.get("resourcekey");
+      return {
+        kind: "embed", provider: "Google Drive", title: "Google Drive video",
+        source: url.href, player: `https://drive.google.com/file/d/${driveId}/preview${resourceKey ? `?resourcekey=${encodeURIComponent(resourceKey)}` : ""}`,
+      };
+    }
+  }
+
+  if (host === "vimeo.com" || host === "player.vimeo.com") {
+    const parts = url.pathname.split("/").filter(Boolean);
+    const vimeoId = [...parts].reverse().find(part => /^\d+$/.test(part));
+    if (vimeoId) {
+      return {
+        kind: "embed", provider: "Vimeo", title: "Vimeo video",
+        source: url.href, player: `https://player.vimeo.com/video/${vimeoId}`,
+      };
+    }
+  }
+
+  if (host === "instagram.com") {
+    const instagramMatch = url.pathname.match(/^\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
+    if (instagramMatch) {
+      return {
+        kind: "embed", provider: "Instagram", title: "Instagram post or Reel",
+        source: url.href, player: `https://www.instagram.com/p/${instagramMatch[1]}/embed/`, vertical: true,
+      };
+    }
+  }
+
+  if (["tiktok.com", "m.tiktok.com"].includes(host)) {
+    const tiktokMatch = url.pathname.match(/\/video\/(\d{10,24})/);
+    if (tiktokMatch) {
+      return {
+        kind: "embed", provider: "TikTok", title: "TikTok video",
+        source: url.href, player: `https://www.tiktok.com/player/v1/${tiktokMatch[1]}?autoplay=0`, vertical: true,
+      };
+    }
+  }
+
+  if (["dailymotion.com", "dai.ly"].includes(host)) {
+    const parts = url.pathname.split("/").filter(Boolean);
+    const dailymotionId = host === "dai.ly" ? parts[0] : (parts[0] === "video" ? parts[1] : "");
+    if (/^[A-Za-z0-9]+$/.test(dailymotionId || "")) {
+      return {
+        kind: "embed", provider: "Dailymotion", title: "Dailymotion video",
+        source: url.href, player: `https://geo.dailymotion.com/player.html?video=${dailymotionId}`,
+      };
+    }
+  }
+
+  if (host === "streamable.com") {
+    const streamableId = url.pathname.split("/").filter(Boolean).pop() || "";
+    if (/^[A-Za-z0-9]+$/.test(streamableId)) {
+      return {
+        kind: "embed", provider: "Streamable", title: "Streamable video",
+        source: url.href, player: `https://streamable.com/e/${streamableId}`,
+      };
+    }
+  }
+
+  if (/\.(mp4|webm|ogg|ogv)$/i.test(url.pathname)) {
+    return {kind: "direct", provider: "Video", title: "Shared video", source: url.href, player: url.href};
+  }
+  return null;
+}
+
+function firstVideoIn(text) {
+  return [...text.matchAll(URL_PATTERN)].map(match => videoDetails(match[0])).find(Boolean) || null;
+}
+
+function firstUrlIn(text) {
+  const match = text.match(URL_PATTERN)?.[0];
+  if (!match) return null;
+  try {
+    const url = new URL(cleanUrlCandidate(match));
+    return ['http:', 'https:'].includes(url.protocol) ? url : null;
+  } catch { return null; }
+}
+
+function appendLinkedText(container, text) {
+  let cursor = 0;
+  for (const match of text.matchAll(URL_PATTERN)) {
+    const candidate = cleanUrlCandidate(match[0]);
+    container.append(document.createTextNode(text.slice(cursor, match.index)));
+    const link = document.createElement("a");
+    link.className = "message-link"; link.href = candidate; link.textContent = candidate;
+    link.target = "_blank"; link.rel = "noopener noreferrer nofollow";
+    container.append(link);
+    cursor = match.index + candidate.length;
+  }
+  container.append(document.createTextNode(text.slice(cursor)));
+}
+
+function videoNode(details) {
+  const card = document.createElement("div"); card.className = "video-card";
+  if (details.vertical) card.classList.add("is-vertical");
+  const frame = document.createElement("div"); frame.className = "video-player-wrap";
+  if (details.kind === "embed") {
+    const player = document.createElement("iframe");
+    player.src = details.player; player.title = details.title; player.loading = "lazy";
+    player.allow = "fullscreen; picture-in-picture; encrypted-media";
+    player.referrerPolicy = "strict-origin-when-cross-origin"; player.allowFullscreen = true;
+    frame.append(player);
+  } else {
+    const player = document.createElement("video");
+    player.src = details.player; player.controls = true; player.preload = "metadata";
+    player.playsInline = true; player.setAttribute("controlslist", "nodownload");
+    frame.append(player);
+  }
+  const source = document.createElement("a");
+  source.className = "video-source-link"; source.href = details.source;
+  source.target = "_blank"; source.rel = "noopener noreferrer nofollow";
+  source.textContent = `${details.provider} · Open original`;
+  card.append(frame, source); return card;
+}
+
+function linkFallbackNode(url) {
+  const link = document.createElement("a"); link.className = "link-fallback";
+  link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer nofollow";
+  const host = document.createElement("strong"); host.textContent = url.hostname.replace(/^www\./, "");
+  const note = document.createElement("span"); note.textContent = "Preview unavailable · Open link ↗";
+  link.append(host, note); return link;
+}
+
 function messageNode(message) {
   const mine = message.client_id === clientId;
   const item = document.createElement("article"); item.className = "message" + (mine ? " mine" : "");
@@ -123,7 +292,25 @@ function messageNode(message) {
   const time = document.createElement("time"), date = new Date(message.created_at);
   time.dateTime = message.created_at; time.title = date.toLocaleString();
   time.textContent = date.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-  const body = document.createElement("div"); body.className = "bubble"; body.textContent = message.body;
+  const body = document.createElement("div"); body.className = "bubble";
+  if (message.image_url) {
+    body.classList.add("image-bubble");
+    const link=document.createElement("a"); link.href=message.image_url;
+    link.target="_blank"; link.rel="noopener"; link.title="Open full-size image";
+    const image=document.createElement("img"); image.src=message.image_url;
+    image.alt="Image shared by "+message.name; image.loading="lazy"; image.decoding="async";
+    link.append(image); body.append(link);
+  }
+  if (message.body) {
+    const caption=document.createElement("div"); caption.className="message-caption";
+    appendLinkedText(caption,message.body); body.append(caption);
+    const video=firstVideoIn(message.body);
+    if (video) { body.classList.add("video-bubble"); body.append(videoNode(video)); }
+    else {
+      const linkedUrl=firstUrlIn(message.body);
+      if (linkedUrl) { body.classList.add("link-bubble"); body.append(linkFallbackNode(linkedUrl)); }
+    }
+  }
   meta.append(name,time); content.append(meta,body);
   item.append(avatarNode(message.avatar,message.name),content); return item;
 }
@@ -189,8 +376,10 @@ function connect() {
       const scroll = el("message-scroll");
       const nearBottom = scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight < 100;
       state.messages.set(message.id,message);
-      if (state.pending && message.client_id === clientId && message.body === state.pending.body) {
+      if (state.pending && message.client_id === clientId && message.body === state.pending.body &&
+          (message.image_url || null) === state.pending.imageUrl) {
         if (el("message-input").value === state.pending.draft) el("message-input").value = "";
+        clearSelectedImage();
         clearPending(); roomError(""); resizeComposer();
       }
       renderMessages();
@@ -227,6 +416,7 @@ function leave() {
   previewProfile();
   el("join-error").textContent = ""; roomError("");
   clearTimeout(fireResetTimer); setFireScene("idle");
+  clearSelectedImage();
   el("display-name").focus();
 }
 el("join-form").addEventListener("submit", event => {
@@ -247,14 +437,65 @@ el("join-form").addEventListener("submit", event => {
   }
 });
 el("leave-button").addEventListener("click",leave);
-el("message-form").addEventListener("submit",event => {
+function clearSelectedImage() {
+  if (state.image?.previewUrl) URL.revokeObjectURL(state.image.previewUrl);
+  state.image=null;
+  el("image-input").value="";
+  el("image-preview").classList.add("hidden");
+  el("image-preview-thumb").removeAttribute("src");
+  el("image-preview-name").textContent="";
+  updateSendState();
+}
+function showSelectedImage(file) {
+  clearSelectedImage();
+  const previewUrl=URL.createObjectURL(file);
+  state.image={file,previewUrl,uploadedUrl:null};
+  el("image-preview-thumb").src=previewUrl;
+  el("image-preview-name").textContent=file.name;
+  el("image-preview").classList.remove("hidden");
+  roomError(""); updateSendState();
+}
+el("image-button").addEventListener("click",() => el("image-input").click());
+el("remove-image").addEventListener("click",clearSelectedImage);
+el("image-input").addEventListener("change",event => {
+  const file=event.target.files?.[0];
+  if (!file) return;
+  const allowed=["image/png","image/jpeg","image/webp","image/gif"];
+  if (!allowed.includes(file.type)) {
+    roomError("Choose a PNG, JPEG, WebP, or GIF image."); el("image-input").value=""; return;
+  }
+  if (file.size>5*1024*1024) {
+    roomError("Images must be 5 MB or smaller."); el("image-input").value=""; return;
+  }
+  showSelectedImage(file);
+});
+el("message-form").addEventListener("submit",async event => {
   event.preventDefault();
   const input=el("message-input"), body=input.value.trim();
-  if (!body || !state.ready || state.pending || state.socket?.readyState!==WebSocket.OPEN) return;
-  state.pending={body,draft:input.value}; el("send-button").disabled=true;
-  el("send-label").textContent="Sending…"; roomError("");
-  try { state.socket.send(JSON.stringify({type:"message",body})); }
-  catch { clearPending(); roomError("Message could not be sent. Your draft is kept."); return; }
+  if ((!body && !state.image) || !state.ready || state.pending || state.uploading ||
+      state.socket?.readyState!==WebSocket.OPEN) return;
+  state.uploading=true; updateSendState(); roomError("");
+  let imageUrl=state.image?.uploadedUrl || null;
+  try {
+    if (state.image && !imageUrl) {
+      el("send-label").textContent="Uploading…";
+      const response=await fetch("/api/uploads",{
+        method:"POST", headers:{"Content-Type":state.image.file.type}, body:state.image.file,
+      });
+      if (!response.ok) {
+        let detail="Image upload failed.";
+        try { detail=(await response.json()).detail || detail; } catch {}
+        throw new Error(detail);
+      }
+      imageUrl=(await response.json()).image_url;
+      state.image.uploadedUrl=imageUrl;
+    }
+    state.uploading=false;
+    state.pending={body,draft:input.value,imageUrl};
+    el("send-label").textContent="Sending…"; updateSendState();
+    state.socket.send(JSON.stringify({type:"message",body,image_url:imageUrl}));
+  }
+  catch (error) { clearPending(); roomError(error.message || "Message could not be sent. Your draft is kept."); return; }
   state.pendingTimer=setTimeout(() => {
     if (!state.pending) return;
     clearPending(); roomError("No confirmation received. Your draft is kept; check the history before retrying.");

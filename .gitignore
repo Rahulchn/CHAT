@@ -24,4 +24,5 @@ cert.pem
 
 # Local tools and unrelated checkouts
 .cloudflared/
+uploads/
 real-time-chat/

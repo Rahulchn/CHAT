@@ -15,6 +15,7 @@ class GroupMessage(Base):
     name: Mapped[str] = mapped_column(String(40))
     avatar: Mapped[str] = mapped_column(String(20), default="orbit", server_default="orbit")
     body: Mapped[str] = mapped_column(Text)
+    image_url: Mapped[str | None] = mapped_column(String(80), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc),
     )

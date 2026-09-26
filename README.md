@@ -2,9 +2,19 @@
 
 Enter a display name and join the room. Everyone sees the same conversation, with live messages and saved history. There are no passwords, accounts, or login tokens.
 
+Messages can include an optional PNG, JPEG, WebP, or GIF image up to 5 MB. The
+server validates and re-encodes images before saving them, which removes embedded
+metadata such as EXIF/GPS data. Uploaded files receive random names and are stored
+locally in the ignored `uploads/` directory.
+
 Choose from eight locally stored photo and meme avatars before joining. Your avatar appears in the room and is saved with each message. The earlier illustrated avatars remain available for displaying old messages, without deleting history. The interface adapts from a desktop sidebar to a full-screen phone layout.
 
 Built with Python FastAPI, native WebSockets, async SQLAlchemy, SQLite, and plain HTML/CSS/JavaScript.
+
+Pasted YouTube, public Google Drive, Vimeo, Instagram, TikTok, Dailymotion,
+Streamable, and direct MP4/WebM/Ogg links play inside the chat. Private or removed
+media and providers that block embedding remain safe clickable links instead of
+being loaded as arbitrary iframes.
 
 ## Run locally
 
@@ -63,6 +73,7 @@ resolving `localhost` to an IPv6 listener that Uvicorn may not be using.
 - `DATABASE_URL` defaults to `sqlite+aiosqlite:///./chat.db`, relative to the working directory. Start from this project directory to keep using the same database.
 - Group messages use a separate `group_messages` table. Existing account and private-message tables are left intact, but are no longer read or exposed by the app. Private conversations are not copied into the group room.
 - All new group messages and history are available to everyone who can reach this app. Display names are not verified or reserved; two visitors may use the same name. The browser's per-tab ID only styles its own messages and is not authentication.
+- Shared images are also available to everyone who can reach the room. They remain on the host machine until manually removed from `uploads/`; deleting an uploaded file leaves its old message without a working image.
 - For PostgreSQL later, install `asyncpg` and set `DATABASE_URL` to your PostgreSQL connection string. Keep credentials in a local `.env` file and never commit it. This changes the database connection; existing SQLite data is not automatically transferred.
 - Run one server worker. Room broadcast and online counts live in that process. Multiple workers would require a shared event layer.
 - The new avatar images came from third-party URLs supplied for this project. Check their reuse rights before publicly distributing or hosting the app.
